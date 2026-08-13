@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestione Item</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/Style.css">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="Index.html">ArtAround</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMain">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="Index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="Items.html">Item</a></li>
+                <li class="nav-item"><a class="nav-link" href="Visits.html">Visite</a></li>
+                <li class="nav-item"><a class="nav-link" href="ChooseVisit.html">Avvia</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <h1 class="mb-4">Gestione Item</h1>
+
+    <!-- FORM -->
+    <div class="card">
+        <div class="card-body">
+            <h2 class="h4">Crea / Modifica Item</h2>
+
+            <form id="itemForm">
+
+                <div class="mb-3">
+                    <input type="text" id="museumId" class="form-control" placeholder="Museum ID" required>
+                </div>
+                <div class="mb-3">
+                    <input type="text" id="objectId" class="form-control" placeholder="Object ID (identificatore univoco dell'oggetto museale)" required>
+                </div>
+                <div class="mb-3">
+                    <input type="text" id="title" class="form-control" placeholder="Titolo" required>
+                </div>
+                <div class="mb-3">
+                    <input type="text" id="recognitionImage" class="form-control" placeholder="URL immagine di riconoscimento (opzionale)">
+                </div>
+
+                <h3 class="h5 mt-4">Contenuti (testi multipli con livelli di profondità diversi)</h3>
+                <div id="variantsList"></div>
+                <button type="button" id="addVariantButton" class="btn btn-outline-secondary btn-sm mb-3">+ Aggiungi un'altra variante di testo</button>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="number" id="price" class="form-control" placeholder="Prezzo (€)" min="0">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" id="room" class="form-control" placeholder="Sala">
+                    </div>
+                    <div class="col-md-4">
+                        <!-- per la compatibilità a wikidata -->
+                        <input type="text" id="externalId" class="form-control" placeholder="Wikidata ID (es: Q12345)">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success mt-3">Salva Item</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TEMPLATE VARIANTE (nascosto, clonato via JS) -->
+    <template id="variantTemplate">
+        <div class="card variant-row">
+            <div class="mb-2">
+                <textarea class="variant-text form-control" placeholder="Testo" required></textarea>
+            </div>
+
+            <div class="row g-2 mb-2">
+                <div class="col-md-6">
+                    <select class="variant-duration form-select">
+                        <option value="3">3s</option>
+                        <option value="15">15s</option>
+                        <option value="40">40s</option>
+                        <option value="60">1min</option>
+                        <option value="240">4min</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <select class="variant-languageLevel form-select">
+                        <option value="infantile">infantile</option>
+                        <option value="elementare">elementare</option>
+                        <option value="medio">medio</option>
+                        <option value="specialistico">specialistico</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+                <div class="col-md-6">
+                    <input type="text" class="variant-author form-control" placeholder="Autore" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="variant-license form-control" placeholder="Licenza" required>
+                </div>
+            </div>
+
+            <div class="form-check mb-2">
+                <input type="checkbox" class="variant-optional form-check-input">
+                <label class="form-check-label">Contenuto opzionale (solo se rimane tempo / su richiesta)</label>
+            </div>
+
+            <button type="button" class="removeVariantButton btn btn-outline-danger btn-sm">Rimuovi variante</button>
+        </div>
+    </template>
+
+    <!-- LISTA -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h2 class="h4">Lista Item</h2>
+
+            <div class="mb-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Cerca per titolo o autore...">
+            </div>
+            <div class="filters row g-2 mb-3">
+
+                <div class="col-md-3">
+                    <select id="filterPrice" class="form-select">
+                        <option value="all">Tutti</option>
+                        <option value="free">Gratis</option>
+                        <option value="paid">A pagamento</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <select id="filterLevel" class="form-select">
+                        <option value="all">Tutti i livelli</option>
+                        <option value="infantile">infantile</option>
+                        <option value="elementare">elementare</option>
+                        <option value="medio">medio</option>
+                        <option value="specialistico">specialistico</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <select id="filterDuration" class="form-select">
+                        <option value="all">Tutte le durate</option>
+                        <option value="3">3s</option>
+                        <option value="15">15s</option>
+                        <option value="40">40s</option>
+                        <option value="60">1min</option>
+                        <option value="240">4min</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <select id="filterRoom" class="form-select">
+                        <option value="all">Tutte le sale</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div id="itemsList"></div>
+        </div>
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="JAVASCRIPT/API.js"></script>
+<script src="JAVASCRIPT/Items.js"></script>
+
+</body>
+</html>
+
