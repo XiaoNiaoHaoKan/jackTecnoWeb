@@ -3,10 +3,9 @@ import Museum from "../Models/museum.js";
 // ===============================
 // OTTIENI CONFIGURAZIONE MUSEO
 // ===============================
-// Il progetto gestisce un solo museo per installazione: restituiamo sempre il primo documento
 export async function getMuseum(req, res) {
     try {
-        const museum = await Museum.findOne().populate("visits");
+        const museum = await Museum.findById(req.user.museumId._id).populate("visits");
         res.json(museum);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -18,11 +17,11 @@ export async function getMuseum(req, res) {
 // ===============================
 export async function saveMuseum(req, res) {
     try {
-        const existing = await Museum.findOne();
+        const existing = await Museum.findById(req.user.museumId._id);
 
         const museum = existing
             ? await Museum.findByIdAndUpdate(existing._id, req.body, { new: true })
-            : await Museum.create(req.body);
+            : await Museum.create({ ...req.body, _id: req.user.museumId._id });
 
         res.json(museum);
     } catch (error) {

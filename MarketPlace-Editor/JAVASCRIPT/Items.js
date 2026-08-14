@@ -278,9 +278,17 @@ async function deleteItem(itemId) {
 // CARICAMENTO INIZIALE
 // ===============================
 
+async function loadAccountMuseum() {
+    const response = await fetch("/api/auth/me");
+    if (!response.ok) return;
+    const account = await response.json();
+    document.getElementById("museumId").value = account.museum?._id || "";
+}
+
 // Quando la pagina viene caricata,
 // carico subito gli item presenti nel DB
 resetVariants();
+loadAccountMuseum();
 loadItems();
 
 async function editItem(itemId) {

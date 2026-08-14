@@ -9,6 +9,7 @@ async function apiGet(url) {
 
     const response = await fetch(API_BASE + url);
 
+    if (response.status === 401) window.location.href = "/Login.html";
     return response.json();
 }
 
@@ -28,6 +29,7 @@ async function apiPost(url, data) {
         body: JSON.stringify(data)
     });
 
+    if (response.status === 401) window.location.href = "/Login.html";
     return response.json();
 }
 
@@ -45,6 +47,7 @@ async function apiPut(url, data) {
         body: JSON.stringify(data)
     });
 
+    if (response.status === 401) window.location.href = "/Login.html";
     return response.json();
 }
 
@@ -58,7 +61,13 @@ async function apiDelete(url) {
         method: "DELETE"
     });
 
+    if (response.status === 401) window.location.href = "/Login.html";
     return response.json();
+}
+
+async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/Login.html";
 }
 
 function showToast(message, type = "success") {

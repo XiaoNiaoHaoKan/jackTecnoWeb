@@ -71,6 +71,8 @@ Il server espone automaticamente anche i file del frontend presenti in `MarketPl
 
 ## API principali
 
+- `/Login.html`: accesso staff, senza registrazione pubblica.
+- `/api/auth`: login, logout e account corrente.
 - `/api/items`: gestione degli item/opere.
 - `/api/visits`: gestione delle visite, dello stato sincronizzato, delle domande e dei quiz.
 
@@ -81,6 +83,19 @@ Il frontend usa `MarketPlace-Editor/JAVASCRIPT/API.js` come punto comune per le 
 La struttura relativa tra `Server` e `MarketPlace-Editor` deve essere mantenuta, perché `server.js` usa il percorso `../MarketPlace-Editor` per pubblicare il frontend.
 
 Prima di condividere o pubblicare il progetto, è consigliato spostare l'indirizzo e le credenziali di MongoDB da `Server/Config/db.js` a variabili d'ambiente e sostituire le credenziali eventualmente già esposte.
+
+## Account staff
+
+Non esiste una registrazione pubblica. Per creare il primo account, copiare `.env.example` in `.env`, impostare `ADMIN_EMAIL` e `ADMIN_PASSWORD` e, se necessario, `ADMIN_MUSEUM_ID` con l'ID del museo associato. Al primo avvio l'account viene creato nel database; le richieste successive vengono limitate a quel museo.
+
+Per creare due account demo associati a due musei distinti eseguire `npm run seed:test-accounts` con MongoDB attivo.
+
+Account demo:
+
+- Email: `account@email.com` - Password: `12345678` - Museo Demo A
+- Email: `account2@email.com` - Password: `12345678` - Museo Demo B
+
+Queste credenziali sono solo per il collaudo locale e non vanno usate in produzione.
 ArtAround – parte personale
 
 Questa cartella contiene la parte del progetto **ArtAround** che ho sviluppato e che deve essere integrata nel progetto completo.

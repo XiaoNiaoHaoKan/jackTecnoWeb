@@ -12,7 +12,7 @@ export async function createVisit(req,res){
     try{
 
         const newVisit =
-        await Visit.create(req.body);
+        await Visit.create({ ...req.body, museumId: req.user.museumId._id });
 
 
         res.json(newVisit);
@@ -41,7 +41,7 @@ export async function getVisits(req,res){
 
 
         const visits =
-        await Visit.find()
+        await Visit.find({ museumId: req.user.museumId._id })
         .populate("sequence.itemId");
 
 
@@ -70,9 +70,7 @@ export async function deleteVisit(req,res){
     try{
 
 
-        await Visit.findByIdAndDelete(
-            req.params.id
-        );
+        await Visit.findOneAndDelete({ _id: req.params.id, museumId: req.user.museumId._id });
 
 
         res.json({
@@ -104,9 +102,9 @@ export async function updateVisit(req,res){
 
 
         const visit =
-        await Visit.findByIdAndUpdate(
-            req.params.id,
-            req.body,
+        await Visit.findOneAndUpdate(
+            { _id: req.params.id, museumId: req.user.museumId._id },
+            { ...req.body, museumId: req.user.museumId._id },
             {
                 new:true
             }
@@ -139,9 +137,7 @@ export async function getVisitState(req,res){
 
 
         const visit =
-        await Visit.findById(
-            req.params.id
-        );
+        await Visit.findOne({ _id: req.params.id, museumId: req.user.museumId._id });
 
 
         res.json({
@@ -187,9 +183,8 @@ export async function updateVisitState(req,res){
 
 
         const visit =
-        await Visit.findByIdAndUpdate(
-
-            req.params.id,
+        await Visit.findOneAndUpdate(
+            { _id: req.params.id, museumId: req.user.museumId._id },
 
             {
                 currentIndex,
@@ -230,9 +225,7 @@ export async function addQuestion(req,res){
 
 
         const visit =
-        await Visit.findById(
-            req.params.id
-        );
+        await Visit.findOne({ _id: req.params.id, museumId: req.user.museumId._id });
 
 
 
@@ -292,7 +285,8 @@ export async function joinVisit(req,res){
         const visit =
         await Visit.findOne({
 
-            syncCode:req.body.code
+            syncCode:req.body.code,
+            museumId: req.user.museumId._id
 
         });
 
@@ -350,9 +344,9 @@ export async function startQuiz(req,res){
 
 
         const visit =
-        await Visit.findByIdAndUpdate(
+        await Visit.findOneAndUpdate(
+            { _id: req.params.id, museumId: req.user.museumId._id },
 
-            req.params.id,
 
             {
                 quizStarted:true
@@ -393,9 +387,7 @@ export async function saveQuizAnswer(req,res){
 
 
         const visit =
-        await Visit.findById(
-            req.params.id
-        );
+        await Visit.findOne({ _id: req.params.id, museumId: req.user.museumId._id });
 
 
 
@@ -534,9 +526,7 @@ export async function getQuizResults(req,res){
 
 
         const visit =
-        await Visit.findById(
-            req.params.id
-        );
+        await Visit.findOne({ _id: req.params.id, museumId: req.user.museumId._id });
 
 
 

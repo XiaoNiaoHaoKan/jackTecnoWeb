@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 
 const visitSchema = new mongoose.Schema({
 
+    museumId: { type: mongoose.Schema.Types.ObjectId, ref: "Museum", required: true },
+
     title: {
 
         type: String,
