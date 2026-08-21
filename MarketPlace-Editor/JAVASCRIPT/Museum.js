@@ -5,6 +5,8 @@ let rooms = [];
 let editingRoomIndex = null;
 let museum = null;
 
+document.getElementById("addRoomButton").addEventListener("click", addRoom);
+
 // ===============================
 // CARICA DATI (da MongoDB)
 // ===============================

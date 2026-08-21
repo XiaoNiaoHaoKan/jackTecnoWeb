@@ -13,7 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node Server/server.js",
-    "seed:test-accounts": "node Server/createTestAccounts.js"
+    "seed:test-accounts": "node Server/createTestAccounts.js",
+    "seed:demo-content": "node Server/seedDemoContent.js"
   },
   "keywords": [],
   "author": "",
