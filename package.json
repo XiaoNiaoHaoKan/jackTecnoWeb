@@ -6,7 +6,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^4.22.1",
-    "mongoose": "^8.23.0"
+    "mongoose": "^8.23.0",
+    "qrcode": "^1.5.4"
   },
   "description": "",
   "main": "Server/server.js",

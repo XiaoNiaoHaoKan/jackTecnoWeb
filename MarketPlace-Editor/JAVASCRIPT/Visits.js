@@ -238,6 +238,7 @@ async function editVisit(visitId) {
     // itemId è popolato dal backend (populate("sequence.itemId")), quindi ha già ._id
     // l'ordine salvato nella visita diventa la sequenza di partenza per il drag & drop
     sequenceOrder = visit.sequence
+        .filter(seq => seq.itemId && seq.itemId._id)
         .sort((a, b) => a.order - b.order)
         .map(seq => seq.itemId._id);
 
@@ -257,6 +258,10 @@ async function editVisit(visitId) {
         behavior: "smooth"
     });
 }
+
+window.startVisit = startVisit;
+window.editVisit = editVisit;
+window.deleteVisit = deleteVisit;
 
 // ===============================
 loadItemsForSelection();

@@ -88,7 +88,7 @@ function startVisit(visitId){
 
 }
 
-
+window.startVisit = startVisit;
 
 // ===============================
 

@@ -10,6 +10,7 @@ import VisitRoutes from "./Routes/VisitRoutes.js";
 import MuseumRoutes from "./Routes/MuseumRoutes.js";
 import AuthRoutes from "./Routes/AuthRoutes.js";
 import { ensureAdminFromEnvironment, requireAuth, requirePageAuth } from "./auth.js";
+import StaffPurchaseRoutes from "./Routes/StaffPurchaseRoutes.js";
 
 const app = express();
 
@@ -31,12 +32,16 @@ app.use(express.json());
 
 // API
 app.use("/api/auth", AuthRoutes);
+
 app.use("/api/items", requireAuth);
 app.use("/api/visits", requireAuth);
 app.use("/api/museum", requireAuth);
+app.use("/api/purchases", requireAuth);
+
 app.use("/api/items", ItemRoutes);
 app.use("/api/visits", VisitRoutes);
 app.use("/api/museum", MuseumRoutes);
+app.use("/api/purchases", StaffPurchaseRoutes);
 
 // Le pagine dell'editor richiedono una sessione; gli asset restano pubblici.
 app.use((req, res, next) => {
