@@ -1,0 +1,23 @@
+{
+  "name": "artaroud-server",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.22.1",
+    "mongoose": "^8.23.0",
+    "qrcode": "^1.5.4"
+  },
+  "description": "",
+  "main": "Server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node Server/server.js",
+    "seed:test-accounts": "node Server/createTestAccounts.js",
+    "seed:demo-content": "node Server/seedDemoContent.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
