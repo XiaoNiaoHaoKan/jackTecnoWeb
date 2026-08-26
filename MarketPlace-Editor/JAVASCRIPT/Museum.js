@@ -7,6 +7,10 @@ let museum = null;
 
 document.getElementById("addRoomButton").addEventListener("click", addRoom);
 
+document
+    .getElementById("generateMuseumQrButton")
+    .addEventListener("click", generateMuseumQr);
+
 // ===============================
 // CARICA DATI (da MongoDB)
 // ===============================
@@ -47,7 +51,7 @@ async function addRoom() {
         // aggiorna sala
         rooms[editingRoomIndex] = { name, description };
 
-        // 🔥 AGGIORNA ITEM
+        // aggiorna item
         await updateItemsRoom(oldName, name);
 
         editingRoomIndex = null;
@@ -253,6 +257,69 @@ function checkSelectedVisits() {
         cb.checked = selectedIds.includes(cb.value);
     });
 }
+
+// ===============================
+// QR CODE DEL MUSEO
+// ===============================
+async function generateMuseumQr() {
+    const button = document.getElementById("generateMuseumQrButton");
+    const image = document.getElementById("museumQrImage");
+    const payloadContainer = document.getElementById("museumQrPayload");
+    const downloadButton = document.getElementById("downloadMuseumQrButton");
+    const loading = document.getElementById("museumQrLoading");
+
+    button.disabled = true;
+    loading.classList.remove("d-none");
+    image.classList.add("d-none");
+
+    try {
+        // Salva prima i dati eventualmente modificati nel form.
+        await saveMuseum();
+
+        const result = await apiGet("/museum/qr");
+
+        if (!result.qrCode) {
+            throw new Error(result.error || "Impossibile generare il QR");
+        }
+
+        image.src = result.qrCode;
+        image.classList.remove("d-none");
+
+        payloadContainer.textContent =
+            JSON.stringify(result.payload, null, 2);
+
+        downloadButton.href = result.qrCode;
+
+        const museumName = result.payload.museum.name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
+
+        downloadButton.download =
+            `artaroud-${museumName || "museo"}-qr.png`;
+
+        const modalElement =
+            document.getElementById("museumQrModal");
+
+        const modal =
+            bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        modal.show();
+
+    } catch (error) {
+        showToast(
+            error.message || "Errore durante la generazione del QR",
+            "delete"
+        );
+
+    } finally {
+        button.disabled = false;
+        loading.classList.add("d-none");
+    }
+}
+
+window.editRoom = editRoom;
+window.removeRoom = removeRoom;
 
 // ===============================
 loadVisitsForMuseum().then(loadMuseum);

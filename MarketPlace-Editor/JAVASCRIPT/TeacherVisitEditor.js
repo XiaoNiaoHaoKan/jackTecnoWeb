@@ -317,8 +317,7 @@ function openPrivateContents(index){
 }
 
 
-window.openPrivateContents =
-openPrivateContents;
+window.openPrivateContents = openPrivateContents;
 
 // =================================
 // AVVIO
