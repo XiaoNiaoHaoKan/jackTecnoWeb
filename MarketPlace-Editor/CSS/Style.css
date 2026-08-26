@@ -654,3 +654,107 @@ textarea.form-control {
         animation-iteration-count: 1 !important;
     }
 }
+
+/* ===============================
+   QR CODE MUSEO
+=============================== */
+
+.museum-qr-modal {
+    border: 1px solid var(--museum-border, #ded8ce);
+    border-radius: 1.1rem;
+    background: var(--museum-paper, #fffdf9);
+    box-shadow: 0 24px 60px rgba(38, 43, 48, 0.18);
+}
+
+.museum-qr-image {
+    display: block;
+    width: min(100%, 420px);
+    height: auto;
+    margin: 1rem auto;
+    padding: 0.75rem;
+    border: 1px solid var(--museum-border, #ded8ce);
+    border-radius: 1rem;
+    background: #fffdf9;
+}
+
+.museum-qr-payload {
+    max-height: 220px;
+    overflow: auto;
+    margin-top: 0.75rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    color: #20262d;
+    background: #f5f1e9;
+    font-size: 0.78rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.purchase-notification {
+    border-left: 6px solid #3c6b5b;
+}
+
+.purchase-notification.is-unread {
+    border-left-color: #ad623d;
+    background: #fff8e8;
+}
+
+.purchase-notification.is-read {
+    opacity: 0.75;
+}
+
+.purchase-date {
+    color: #66717c;
+    font-size: 0.9rem;
+}
+
+.purchase-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+}
+
+.purchase-item-preview {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    border: 1px solid #ded8ce;
+    border-left: 4px solid #ad623d;
+    border-radius: 0.85rem;
+    background: #fffdf9;
+}
+
+.purchase-item-preview[hidden] {
+    display: none;
+}
+
+.purchase-item-details {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.5rem 1.5rem;
+}
+
+.purchase-item-details p,
+.purchase-narrative p {
+    margin: 0.35rem 0;
+    line-height: 1.5;
+}
+
+.purchase-item-image {
+    display: block;
+    width: min(100%, 420px);
+    max-height: 280px;
+    margin-bottom: 1.25rem;
+    border-radius: 0.75rem;
+    object-fit: cover;
+    background: #f5f1e9;
+}
+
+.purchase-narrative {
+    margin-top: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #ded8ce;
+    border-radius: 0.75rem;
+    background: #faf7f2;
+}

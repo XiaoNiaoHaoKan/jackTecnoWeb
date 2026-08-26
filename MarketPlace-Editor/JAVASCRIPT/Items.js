@@ -320,3 +320,6 @@ async function editItem(itemId) {
     });
 }
 
+window.editItem = editItem;
+window.deleteItem = deleteItem;
+

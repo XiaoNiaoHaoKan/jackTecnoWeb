@@ -7,7 +7,8 @@ const PANELS = {
     visits:  { page: "Visits.html",             script: "JAVASCRIPT/Visits.js" },
     choose:  { page: "ChooseVisit.html",         script: "JAVASCRIPT/ChooseVisit.js" },
     teacher: { page: "TeacherVisitEditor.html",  script: "JAVASCRIPT/TeacherVisitEditor.js" },
-    museum:  { page: "Museum.html",              script: "JAVASCRIPT/Museum.js" }
+    museum:  { page: "Museum.html",              script: "JAVASCRIPT/Museum.js" },
+    notifications: {page: "PurchaseNotifications.html",script: "JAVASCRIPT/PurchaseNotifications.js"}
 };
 
 const panelContent = document.getElementById("panelContent");
