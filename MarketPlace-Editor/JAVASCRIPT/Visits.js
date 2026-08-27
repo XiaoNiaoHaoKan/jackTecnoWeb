@@ -145,6 +145,7 @@ async function loadVisits() {
 
             <button class="btn btn-sm btn-primary" onclick="startVisit('${visit._id}')">Avvia</button>
             <button class="btn btn-sm btn-outline-primary" onclick="editVisit('${visit._id}')">Modifica</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="generateVisitQr('${visit._id}')">Genera QR</button>
             <button class="btn btn-sm btn-outline-danger" onclick="deleteVisit('${visit._id}')">Elimina</button>
             </div>
         `;
@@ -259,9 +260,73 @@ async function editVisit(visitId) {
     });
 }
 
+// ===============================
+// QR CODE DELLA VISITA
+// ===============================
+async function generateVisitQr(visitId) {
+    const image = document.getElementById("visitQrImage");
+    const payloadContainer = document.getElementById("visitQrPayload");
+    const downloadButton = document.getElementById("downloadVisitQrButton");
+    const loading = document.getElementById("visitQrLoading");
+    const title = document.getElementById("visitQrModalTitle");
+
+    loading.classList.remove("d-none");
+    image.classList.add("d-none");
+
+    try {
+        const result = await apiGet(`/visits/${visitId}/qr`);
+
+        if (!result.qrCode) {
+            throw new Error(
+                result.error || "Impossibile generare il QR della visita"
+            );
+        }
+
+        title.textContent = `QR della visita: ${result.visitTitle}`;
+
+        image.src = result.qrCode;
+        image.classList.remove("d-none");
+
+        payloadContainer.textContent =
+            JSON.stringify(result.payload, null, 2);
+
+        downloadButton.href = result.qrCode;
+
+        const museumName = (result.museumName || "museo")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
+
+        const visitTitle = (result.visitTitle || "visita")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
+
+        downloadButton.download =
+            `artaroud-${museumName}-${visitTitle}-qr.png`;
+
+        const modalElement =
+            document.getElementById("visitQrModal");
+
+        bootstrap.Modal
+            .getOrCreateInstance(modalElement)
+            .show();
+
+    } catch (error) {
+        showToast(
+            error.message || "Errore durante la generazione del QR",
+            "delete"
+        );
+
+    } finally {
+        loading.classList.add("d-none");
+    }
+}
+
 window.startVisit = startVisit;
 window.editVisit = editVisit;
 window.deleteVisit = deleteVisit;
+window.generateVisitQr = generateVisitQr;
 
 // ===============================
 loadItemsForSelection();

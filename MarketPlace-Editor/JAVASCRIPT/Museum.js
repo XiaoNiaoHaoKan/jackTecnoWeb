@@ -290,7 +290,7 @@ async function generateMuseumQr() {
 
         downloadButton.href = result.qrCode;
 
-        const museumName = result.payload.museum.name
+        const museumName = (result.museumName || "museo")
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-|-$/g, "");
