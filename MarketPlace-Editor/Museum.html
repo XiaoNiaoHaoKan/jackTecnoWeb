@@ -46,18 +46,24 @@
                 <div class="mb-3">
                     <textarea id="description" class="form-control" placeholder="Descrizione"></textarea>
                 </div>
+                <div class="mb-3">
+                    <input type="text" id="mapUrl" class="form-control" placeholder="Link alla mappa del museo (mostrato anche sul Navigator)">
+                </div>
 
                 <h3 class="h5">Sale del museo</h3>
                 <div id="roomsList"></div>
 
                 <div class="row g-2 mb-2">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <input type="text" id="newRoom" class="form-control" placeholder="Nome sala">
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <input type="text" id="newRoomDescription" class="form-control" placeholder="Descrizione sala">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
+                        <input type="text" id="newRoomFloorplanUrl" class="form-control" placeholder="Link planimetria sala">
+                    </div>
+                    <div class="col-md-1">
                         <button type="button" id="addRoomButton" class="btn btn-outline-secondary w-100">Aggiungi sala</button>
                     </div>
                 </div>

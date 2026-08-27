@@ -23,6 +23,7 @@ async function loadMuseum() {
     document.getElementById("name").value = museum.name || "";
     document.getElementById("city").value = museum.city || "";
     document.getElementById("description").value = museum.description || "";
+    document.getElementById("mapUrl").value = museum.mapUrl || "";
 
     rooms = museum.rooms || [];
 
@@ -38,9 +39,11 @@ async function addRoom() {
 
     const nameInput = document.getElementById("newRoom");
     const descInput = document.getElementById("newRoomDescription");
+    const floorplanInput = document.getElementById("newRoomFloorplanUrl");
 
     const name = nameInput.value.trim();
     const description = descInput.value.trim();
+    const floorplanUrl = floorplanInput.value.trim();
 
     if (!name) return;
 
@@ -49,7 +52,7 @@ async function addRoom() {
         const oldName = rooms[editingRoomIndex].name;
 
         // aggiorna sala
-        rooms[editingRoomIndex] = { name, description };
+        rooms[editingRoomIndex] = { name, description, floorplanUrl };
 
         // aggiorna item
         await updateItemsRoom(oldName, name);
@@ -60,13 +63,14 @@ async function addRoom() {
 
     } else {
         // CREATE
-        rooms.push({ name, description });
+        rooms.push({ name, description, floorplanUrl });
 
         showToast("Sala aggiunta", "success");
     }
 
     nameInput.value = "";
     descInput.value = "";
+    floorplanInput.value = "";
 
     renderRooms();
     await saveMuseum();
@@ -90,6 +94,7 @@ function renderRooms() {
             <div class="card-body">
             <h3>${room.name}</h3>
             <p>${room.description || "Nessuna descrizione"}</p>
+            ${room.floorplanUrl ? `<p><a href="${room.floorplanUrl}" target="_blank" rel="noopener">Planimetria sala</a></p>` : ""}
 
             <button class="btn btn-sm btn-outline-primary" onclick="editRoom(${index})">Modifica</button>
             <button class="btn btn-sm btn-outline-danger" onclick="removeRoom(${index})">Elimina</button>
@@ -114,6 +119,7 @@ async function saveMuseum() {
         name: document.getElementById("name").value,
         city: document.getElementById("city").value,
         description: document.getElementById("description").value,
+        mapUrl: document.getElementById("mapUrl").value,
         rooms: rooms,
         visits: selectedVisits
     };
@@ -130,6 +136,7 @@ function editRoom(index) {
 
     document.getElementById("newRoom").value = room.name;
     document.getElementById("newRoomDescription").value = room.description;
+    document.getElementById("newRoomFloorplanUrl").value = room.floorplanUrl || "";
 
     editingRoomIndex = index;
 

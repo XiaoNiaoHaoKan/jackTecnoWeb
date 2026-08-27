@@ -61,16 +61,16 @@ I file `.DS_Store`, la cartella `__MACOSX/`, la cartella `test/` vuota e gli eve
 3. Controllare la configurazione MongoDB in `Server/Config/db.js`.
 3.1 Test sul locale, database in locale
    (fai un cambiamento su .env)
-   MONGO_URI=mongodb://127.0.0.1:27017/artaroud
+   MONGO_URI=mongodb://127.0.0.1:27017/artaround
    PORT=8000
    
    (Test in locale con il database, scritte sul bash)
-   podman volume create artaroud-mongo-data
+   podman volume create artaround-mongo-data
 
    podman run -d \
-      --name artaroud-mongo \
+      --name artaround-mongo \
       -p 27017:27017 \
-      -v artaroud-mongo-data:/data/db \
+      -v artaround-mongo-data:/data/db \
       docker.io/library/mongo:7
 
    npm run seed:test-accounts
@@ -79,7 +79,7 @@ I file `.DS_Store`, la cartella `__MACOSX/`, la cartella `test/` vuota e gli eve
    
    (le volte successive basta, solo questa riga)
 
-   podman start artaroud-mongo
+   podman start artaround-mongo
 
 4. Avviare il progetto:
 
