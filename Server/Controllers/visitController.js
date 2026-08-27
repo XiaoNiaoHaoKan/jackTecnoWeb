@@ -1,6 +1,6 @@
 // Importiamo il modello Visit per poter interagire con MongoDB
 import Visit from "../Models/visits.js";
-
+import QRCode from "qrcode";
 
 
 // ===============================
@@ -562,4 +562,57 @@ export async function getQuizResults(req,res){
 
     }
 
+}
+
+// ===============================
+// GENERA QR DELLA VISITA
+// ===============================
+export async function getVisitQr(req, res) {
+    try {
+        const visit = await Visit.findOne({
+            _id: req.params.id,
+            museumId: req.user.museumId._id
+        }).populate("museumId", "name");
+
+        if (!visit) {
+            return res.status(404).json({
+                error: "Visita non trovata"
+            });
+        }
+
+        // Questi sono gli unici dati inseriti realmente nel QR.
+        const payload = {
+            type: "artaroud-visit",
+            version: 1,
+            museumId: visit.museumId._id.toString(),
+            visitId: visit._id.toString()
+        };
+
+        const qrCode = await QRCode.toDataURL(
+            JSON.stringify(payload),
+            {
+                errorCorrectionLevel: "M",
+                width: 420,
+                margin: 2,
+                color: {
+                    dark: "#17324d",
+                    light: "#fffdf9"
+                }
+            }
+        );
+
+        res.json({
+            qrCode,
+            payload,
+
+            // Questi nomi non vengono inseriti nel QR.
+            museumName: visit.museumId.name,
+            visitTitle: visit.title
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
 }

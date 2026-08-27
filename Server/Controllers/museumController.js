@@ -35,12 +35,7 @@ export async function saveMuseum(req, res) {
 // ===============================
 export async function getMuseumQr(req, res) {
     try {
-        const museum = await Museum
-            .findById(req.user.museumId._id)
-            .populate({
-                path: "visits",
-                select: "title synchronized"
-            });
+        const museum = await Museum.findById(req.user.museumId._id);
 
         if (!museum) {
             return res.status(404).json({
@@ -48,43 +43,32 @@ export async function getMuseumQr(req, res) {
             });
         }
 
+        // Questi sono gli unici dati inseriti realmente nel QR.
         const payload = {
             type: "artaroud-museum",
             version: 1,
-            museum: {
-                id: museum._id.toString(),
-                name: museum.name,
-                city: museum.city || "",
-                description: museum.description || "",
-
-                rooms: museum.rooms.map(room => ({
-                    name: room.name,
-                    description: room.description || ""
-                })),
-
-                visits: museum.visits.map(visit => ({
-                    id: visit._id.toString(),
-                    title: visit.title,
-                    synchronized: visit.synchronized
-                }))
-            }
+            museumId: museum._id.toString()
         };
 
-        const payloadText = JSON.stringify(payload);
-
-        const qrCode = await QRCode.toDataURL(payloadText, {
-            errorCorrectionLevel: "M",
-            width: 420,
-            margin: 2,
-            color: {
-                dark: "#17324d",
-                light: "#fffdf9"
+        const qrCode = await QRCode.toDataURL(
+            JSON.stringify(payload),
+            {
+                errorCorrectionLevel: "M",
+                width: 420,
+                margin: 2,
+                color: {
+                    dark: "#17324d",
+                    light: "#fffdf9"
+                }
             }
-        });
+        );
 
         res.json({
             qrCode,
-            payload
+            payload,
+
+            // Serve solo all'interfaccia e non viene inserito nel QR.
+            museumName: museum.name
         });
 
     } catch (error) {

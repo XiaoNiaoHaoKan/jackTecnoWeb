@@ -16,7 +16,8 @@ import {
     joinVisit,
     startQuiz,
     saveQuizAnswer,
-    getQuizResults
+    getQuizResults,
+    getVisitQr
 } from "../Controllers/visitController.js";
 
 
@@ -52,6 +53,8 @@ router.get(
     getVisitState
 );
 
+router.get("/", getVisits);
+router.get("/:id/qr", getVisitQr);
 
 router.put(
     "/:id/state",
