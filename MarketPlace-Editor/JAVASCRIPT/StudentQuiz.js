@@ -1,218 +1,69 @@
-const params =
-    new URLSearchParams(window.location.search);
-
-const visitId =
-    params.get("id");
-
+const params = new URLSearchParams(window.location.search);
+const visitId = params.get("id");
 let visit = null;
 
+async function loadQuiz() {
+    const visits = await apiGet("/visits");
+    visit = visits.find(v => v._id === visitId);
 
-
-// =====================================
-// CARICA QUIZ
-// =====================================
-
-async function loadQuiz(){
-
-    const visits =
-        await apiGet("/visits");
-
-    visit =
-        visits.find(
-            v=>v._id===visitId
-        );
-
-    if(!visit){
-
+    if (!visit) {
         alert("Visita non trovata");
         return;
-
     }
 
     showQuiz();
-
 }
 
+function showQuiz() {
+    const container = document.getElementById("quizContainer");
+    container.innerHTML = "";
 
+    visit.quiz.forEach((question, questionIndex) => {
+        const card = document.createElement("div");
+        card.className = "card mb-3";
 
-// =====================================
-// MOSTRA QUIZ
-// =====================================
+        const body = document.createElement("div");
+        body.className = "card-body";
+        body.innerHTML = `<h3 class="h5">${questionIndex + 1}) ${question.question}</h3>`;
 
-function showQuiz(){
-
-    const container =
-        document.getElementById(
-            "quizContainer"
-        );
-
-    container.innerHTML="";
-
-
-
-    visit.quiz.forEach((q,index)=>{
-
-        let html=`
-
-        <div class="card mb-3">
-        <div class="card-body">
-
-        <h3 class="h5">
-
-        ${index+1}) ${q.question}
-
-        </h3>
-
-        `;
-
-
-
-        q.answers.forEach((answer,i)=>{
-
-            html+=`
-
-            <div class="form-check">
-            <input
-
-            type="radio"
-            class="form-check-input"
-
-            name="question${index}"
-
-            value="${i}"
-
-            id="q${index}a${i}"
-
-            >
-
-            <label class="form-check-label" for="q${index}a${i}">${answer}</label>
-            </div>
-
-            `;
-
+        question.answers.forEach((answer, answerIndex) => {
+            const label = document.createElement("label");
+            label.className = "form-check d-block";
+            label.innerHTML = `<input type="radio" class="form-check-input" name="question${questionIndex}" value="${answerIndex}"> ${answer}`;
+            body.appendChild(label);
         });
 
-
-
-        html+="</div></div>";
-
-
-
-        container.innerHTML+=html;
-
+        card.appendChild(body);
+        container.appendChild(card);
     });
 
-
-
-    container.innerHTML+=`
-
-    <button id="submitQuiz" class="btn btn-success">
-
-    Consegna quiz
-
-    </button>
-
-    `;
-
-
-
-    document
-    .getElementById("submitQuiz")
-    .addEventListener(
-        "click",
-        submitQuiz
-    );
-
+    const submitButton = document.createElement("button");
+    submitButton.id = "submitQuiz";
+    submitButton.className = "btn btn-success";
+    submitButton.textContent = "Consegna quiz";
+    submitButton.addEventListener("click", submitQuiz);
+    container.appendChild(submitButton);
 }
 
-
-
-// =====================================
-// INVIO QUIZ
-// =====================================
-
-async function submitQuiz(){
-
-    let score=0;
-
-
-
-    visit.quiz.forEach((q,index)=>{
-
-        const checked=
-
-        document.querySelector(
-
-            `input[name="question${index}"]:checked`
-
+async function submitQuiz() {
+    const answers = visit.quiz.map((question, questionIndex) => {
+        const checked = document.querySelector(
+            `input[name="question${questionIndex}"]:checked`
         );
-
-
-
-        if(
-
-            checked &&
-
-            Number(checked.value)===q.correctIndex
-
-        ){
-
-            score++;
-
-        }
-
+        return checked ? Number(checked.value) : -1;
     });
 
+    const score = answers.reduce((total, answer, index) =>
+        total + (answer === visit.quiz[index].correctIndex ? 1 : 0), 0);
+    const studentName = localStorage.getItem("studentName") || "Studente";
 
+    await apiPost(`/visits/${visit._id}/quizAnswer`, {
+        studentName,
+        answers
+    });
 
-    const studentName=
-
-        localStorage.getItem("studentName") ||
-
-        "Studente";
-
-
-
-    await apiPost(
-
-        `/visits/${visit._id}/quizAnswer`,
-
-        {
-
-            student:studentName,
-
-            score:score
-
-        }
-
-    );
-
-
-
-    alert(
-
-        `Quiz inviato!\nPunteggio: ${score}/${visit.quiz.length}`
-
-    );
-
-
-
-    document.body.innerHTML=`
-
-    <h1>
-
-    Quiz consegnato.
-
-    Grazie!
-
-    </h1>
-
-    `;
-
+    alert(`Quiz inviato!\nPunteggio: ${score}/${visit.quiz.length}`);
+    document.body.innerHTML = "<h1>Quiz consegnato.</h1><p>Grazie!</p>";
 }
-
-
-
-// =====================================
 
 loadQuiz();

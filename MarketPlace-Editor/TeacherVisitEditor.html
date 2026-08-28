@@ -37,11 +37,18 @@
                 <select id="visitSelect" class="form-select"></select>
             </div>
 
+            <div class="border rounded p-3 mb-3">
+                <h3 class="h5">Crea una nuova visita docente</h3>
+                <input type="text" id="newVisitTitle" class="form-control mb-2" placeholder="Titolo della visita">
+                <input type="text" id="newVisitCode" class="form-control" placeholder="Codice per gli studenti (facoltativo)">
+                <button id="createVisitButton" class="btn btn-primary mt-2" type="button">Crea visita</button>
+            </div>
+
             <div class="mb-3">
                 <input type="text" id="syncCode" class="form-control" placeholder="Nome mnemonico (es. FeniceRossa)">
             </div>
 
-            <button id="saveButton" class="btn btn-outline-primary">Salva codice</button>
+            <button id="saveButton" class="btn btn-outline-primary">Salva configurazione</button>
             <button id="quizButton" class="btn btn-outline-secondary">Gestisci quiz</button>
             <button id="startButton" class="btn btn-success">Avvia gita</button>
         </div>

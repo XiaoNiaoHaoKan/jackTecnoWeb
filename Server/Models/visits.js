@@ -57,6 +57,9 @@ const visitSchema = new mongoose.Schema({
 
     },
 
+    active: { type: Boolean, default: false },
+    startedAt: { type: Date },
+
 
 
     // ===============================
@@ -194,6 +197,8 @@ const visitSchema = new mongoose.Schema({
 
     },
 
+    quizOpen: { type: Boolean, default: false },
+
 
 
     // ===============================
@@ -241,6 +246,15 @@ const visitSchema = new mongoose.Schema({
 
     ],
 
+    quizAnswers: [
+        {
+            studentName: String,
+            answers: [Number],
+            score: Number,
+            submittedAt: Date
+        }
+    ],
+
 
 
     // ===============================
@@ -272,6 +286,18 @@ const visitSchema = new mongoose.Schema({
 
     ],
 
+    requests: [
+        {
+            studentName: String,
+            stepIndex: Number,
+            itemId: { type: mongoose.Schema.Types.ObjectId, ref: "Item" },
+            requestType: String,
+            requestedDuration: String,
+            requestedLanguageLevel: String,
+            createdAt: Date
+        }
+    ],
+
 
 
     // ===============================
@@ -301,6 +327,14 @@ const visitSchema = new mongoose.Schema({
 
         }
 
+    ],
+
+    participants: [
+        {
+            name: String,
+            joinedAt: Date,
+            lastSeen: Date
+        }
     ]
 
 },

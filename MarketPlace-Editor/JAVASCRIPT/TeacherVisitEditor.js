@@ -14,7 +14,7 @@ async function loadVisits(){
         await apiGet("/visits");
 
     const synchronizedVisits =
-        visits.filter(v=>v.synchronized);
+        visits;
 
     visitSelect.innerHTML="";
 
@@ -45,6 +45,10 @@ async function loadVisits(){
             selectedVisit.syncCode || "";
 
     }
+
+    if (!selectedVisit) {
+        syncCodeInput.value = "";
+    }
     showVisitItems();
 }
 
@@ -64,10 +68,41 @@ visitSelect.addEventListener("change",async()=>{
             v=>v._id===visitSelect.value
         );
 
-    syncCodeInput.value =
-        selectedVisit.syncCode || "";
+    syncCodeInput.value = selectedVisit?.syncCode || "";
     
     showVisitItems();
+});
+
+document.getElementById("createVisitButton").addEventListener("click", async () => {
+    const title = document.getElementById("newVisitTitle").value.trim();
+    const syncCode = document.getElementById("newVisitCode").value.trim();
+
+    if (!title) {
+        alert("Inserisci il titolo della visita.");
+        return;
+    }
+
+    const created = await apiPost("/visits", {
+        title,
+        synchronized: true,
+        syncCode: syncCode || undefined,
+        sequence: [],
+        quiz: []
+    });
+
+    if (!created || !created._id) {
+        alert(created?.error || created?.message || "Impossibile creare la visita.");
+        return;
+    }
+
+    document.getElementById("newVisitTitle").value = "";
+    document.getElementById("newVisitCode").value = "";
+    await loadVisits();
+    visitSelect.value = created._id;
+    selectedVisit = created;
+    syncCodeInput.value = created.syncCode || "";
+    showVisitItems();
+    showToast("Visita creata");
 });
 
 
@@ -94,7 +129,8 @@ document
 
             {
                 ...selectedVisit,
-                syncCode:syncCodeInput.value
+                syncCode:syncCodeInput.value,
+                synchronized:true
             }
 
         );
@@ -190,9 +226,7 @@ async function loadSavedVisits(){
 
     container.innerHTML="";
 
-    visits
-    .filter(v=>v.synchronized)
-    .forEach(visit=>{
+    visits.forEach(visit=>{
 
         const div =
             document.createElement("div");
@@ -270,7 +304,7 @@ function showVisitItems(){
 
                 <div class="card-body">
                 <h3>
-                    ${item.itemId.title}
+                    ${item.itemId?.title || item.itemId?.name || item.itemId || "Opera non disponibile"}
                 </h3>
 
 

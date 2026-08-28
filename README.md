@@ -43,54 +43,6 @@ ArtAround-backup/
 
 I file `.DS_Store`, la cartella `__MACOSX/`, la cartella `test/` vuota e gli eventuali file vuoti non sono necessari per l'integrazione.
 
-## Requisiti
-
-- Node.js
-- npm
-- MongoDB raggiungibile dal server
-
-## Avvio
-
-1. Aprire il terminale nella cartella `Server`.
-2. Installare le dipendenze:
-
-   ```bash
-   npm install
-   ```
-
-3. Controllare la configurazione MongoDB in `Server/Config/db.js`.
-3.1 Test sul locale, database in locale
-   (fai un cambiamento su .env)
-   MONGO_URI=mongodb://127.0.0.1:27017/artaround
-   PORT=8000
-   
-   (Test in locale con il database, scritte sul bash)
-   podman volume create artaround-mongo-data
-
-   podman run -d \
-      --name artaround-mongo \
-      -p 27017:27017 \
-      -v artaround-mongo-data:/data/db \
-      docker.io/library/mongo:7
-
-   npm run seed:test-accounts
-
-      (questo crea i account qui sotto elencati)
-   
-   (le volte successive basta, solo questa riga)
-
-   podman start artaround-mongo
-
-4. Avviare il progetto:
-
-   ```bash
-   npm start
-   ```
-
-5. Aprire nel browser `http://localhost:8000`.
-
-Il server espone automaticamente anche i file del frontend presenti in `MarketPlace-Editor`.
-
 ## API principali
 
 - `/Login.html`: accesso staff, senza registrazione pubblica.
@@ -108,19 +60,7 @@ Prima di condividere o pubblicare il progetto, è consigliato spostare l'indiriz
 
 ## Account staff
 
-Non esiste una registrazione pubblica. Per creare il primo account, copiare `.env.example` in `.env`, impostare `ADMIN_EMAIL` e `ADMIN_PASSWORD` e, se necessario, `ADMIN_MUSEUM_ID` con l'ID del museo associato. Al primo avvio l'account viene creato nel database; le richieste successive vengono limitate a quel museo.
-
-Per creare due account demo associati a due musei distinti eseguire `npm run seed:test-accounts` con MongoDB attivo.
-
-Account demo:
-
-- Email: `account@email.com` - Password: `12345678` - Museo Demo A
-- Email: `account2@email.com` - Password: `12345678` - Museo Demo B
-
-Queste credenziali sono solo per il collaudo locale e non vanno usate in produzione.
-ArtAround – parte personale
-
-Questa cartella contiene la parte del progetto **ArtAround** che ho sviluppato e che deve essere integrata nel progetto completo.
+Non esiste una registrazione pubblica.
 
 ## Contenuto
 
@@ -162,32 +102,6 @@ ArtAround-backup/
 ```
 
 I file `.DS_Store`, la cartella `__MACOSX/`, la cartella `test/` vuota e gli eventuali file vuoti non sono necessari per l'integrazione.
-
-## Requisiti
-
-- Node.js
-- npm
-- MongoDB raggiungibile dal server
-
-## Avvio
-
-1. Aprire il terminale nella cartella `Server`.
-2. Installare le dipendenze:
-
-   ```bash
-   npm install
-   ```
-
-3. Controllare la configurazione MongoDB in `Server/Config/db.js`.
-4. Avviare il progetto:
-
-   ```bash
-   npm start
-   ```
-
-5. Aprire nel browser `http://localhost:8000`.
-
-Il server espone automaticamente anche i file del frontend presenti in `MarketPlace-Editor`.
 
 ## API principali
 

@@ -188,7 +188,8 @@ export async function updateVisitState(req,res){
 
             {
                 currentIndex,
-                isPlaying
+                isPlaying,
+                ...(isPlaying ? { active: true, startedAt: new Date() } : {})
             },
 
             {
@@ -349,7 +350,8 @@ export async function startQuiz(req,res){
 
 
             {
-                quizStarted:true
+                quizStarted:true,
+                quizOpen:true
             },
 
             {
@@ -404,10 +406,10 @@ export async function saveQuizAnswer(req,res){
 
 
 
-        const {
-            studentName,
-            answers
-        } = req.body;
+        const studentName = req.body.studentName || req.body.student;
+        const answers = Array.isArray(req.body.answers)
+            ? req.body.answers
+            : [];
 
 
 
@@ -585,7 +587,8 @@ export async function getVisitQr(req, res) {
             type: "artaroud-visit",
             version: 1,
             museumId: visit.museumId._id.toString(),
-            visitId: visit._id.toString()
+            visitId: visit._id.toString(),
+            syncCode: visit.synchronized ? visit.syncCode : undefined
         };
 
         const qrCode = await QRCode.toDataURL(

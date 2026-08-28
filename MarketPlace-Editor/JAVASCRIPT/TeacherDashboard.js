@@ -169,9 +169,15 @@ function showQuestions(){
 
     container.innerHTML="";
 
+    const questions = [
+        ...(visit.questions || []),
+        ...(visit.requests || []).map(request => ({
+            text: `${request.studentName}: ${request.requestType}`
+        }))
+    ];
+
     if(
-        !visit.questions ||
-        visit.questions.length===0
+        questions.length===0
     ){
 
         container.innerHTML =
@@ -180,7 +186,7 @@ function showQuestions(){
         return;
     }
 
-    visit.questions.forEach(q=>{
+    questions.forEach(q=>{
 
         const p =
             document.createElement("p");
@@ -208,9 +214,17 @@ function showStudents(){
 
     container.innerHTML="";
 
+    const students = [
+        ...(visit.students || []),
+        ...(visit.participants || []).filter(participant =>
+            !(visit.students || []).some(student =>
+                student.name.toLowerCase() === participant.name.toLowerCase()
+            )
+        )
+    ];
+
     if(
-        !visit.students ||
-        visit.students.length===0
+        students.length===0
     ){
 
         container.innerHTML =
@@ -220,7 +234,7 @@ function showStudents(){
 
     }
 
-    visit.students.forEach(student=>{
+    students.forEach(student=>{
 
         const p =
             document.createElement("p");
@@ -254,7 +268,14 @@ async function showQuizResults(){
 
     container.innerHTML="";
 
-    if(results.length===0){
+    const combinedResults = [
+        ...results,
+        ...(visit.quizAnswers || []).filter(answer =>
+            !results.some(result => result.studentName === answer.studentName)
+        )
+    ];
+
+    if(combinedResults.length===0){
 
         container.innerHTML =
             "Nessun risultato";
@@ -263,7 +284,7 @@ async function showQuizResults(){
 
     }
 
-    results.forEach(r=>{
+    combinedResults.forEach(r=>{
 
         const p =
             document.createElement("p");
@@ -334,11 +355,20 @@ setInterval(async()=>{
     visit.questions =
         updated.questions || [];
 
+    visit.requests =
+        updated.requests || [];
+
     visit.students =
         updated.students || [];
 
+    visit.participants =
+        updated.participants || [];
+
     visit.quizResults =
         updated.quizResults || [];
+
+    visit.quizAnswers =
+        updated.quizAnswers || [];
 
     showQuestions();
     showStudents();
